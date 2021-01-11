@@ -12,8 +12,6 @@ namespace App\Controllers;
 use App\Models\MenuModel;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-//use Slim\Http\Request;
-//use Slim\Http\Response;
 
 class MenuController
 {
@@ -22,6 +20,41 @@ class MenuController
     {
         $this->menu = new MenuModel();
     }
+
+    public function addItem(Request $request, Response $response, array $args)
+    {
+        $queryParams = $request->getParsedBody();
+        $name = $queryParams['name'];
+        $price = $queryParams['price'];
+
+        $result = $this->menu->addMenu($name, $price);
+        $response->getBody()->write(json_encode($result));
+        $response = $response->withHeader('Content-Type','application/json');
+        return $response;
+    }
+
+    public function deleteMenu(Request $request, Response $response, array $args)
+    {
+        $queryParams = $request->getParsedBody();
+        $id = $queryParams['menu_id'];
+
+        $result = $this->menu->deleteMenu($id);
+        $response->getBody()->write(json_encode($result));
+        $response = $response->withHeader('Content-Type','application/json');
+        return $response;
+    }
+
+    public function updateMenu(Request $request, Response $response, array $args)
+    {
+        $queryParams = $request->getParsedBody();
+        $id = $queryParams['menu_id'];
+
+        $result = $this->menu->updateMenu($queryParams);
+        $response->getBody()->write(json_encode($result));
+        $response = $response->withHeader('Content-Type','application/json');
+        return $response;
+    }
+
 
     public function getItems(Request $request, Response $response, array $args)
     {

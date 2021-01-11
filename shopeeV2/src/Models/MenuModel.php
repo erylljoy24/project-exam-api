@@ -2,11 +2,83 @@
 
 namespace App\Models;
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use PDO;
 
 class MenuModel {
+
+    public function addMenu($prod_name, $price)
+    {
+        $db = Database::getInstance()->getDB();
+        try
+        {
+            $db->beginTransaction();
+
+            $sql = "INSERT INTO `menu` (name, price) VALUES (:prod_name, :price)";
+
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':prod_name',$prod_name);
+            $stmt->bindParam(':price',$price);
+
+            $stmt->execute();
+
+            $db->commit();
+        }
+        catch (\Exception $e)
+        {
+            $db->rollBack();
+            throw $e;
+        }
+        return ['message' => 'ok'];
+    }
+
+    public function deleteMenu($id)
+    {
+        $db = Database::getInstance()->getDB();
+        try
+        {
+            $db->beginTransaction();
+
+            $sql = "DELETE FROM `menu` WHERE menu_id = :menu_id";
+
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':menu_id',$id);
+
+            $stmt->execute();
+
+            $db->commit();
+        }
+        catch (\Exception $e)
+        {
+            $db->rollBack();
+            throw $e;
+        }
+        return ['message' => 'ok'];
+    }
+
+    public function updateMenu($request)
+    {
+        $db = Database::getInstance()->getDB();
+        try
+        {
+
+            $db->beginTransaction();
+
+            $sql = "DELETE FROM `menu` WHERE menu_id = :menu_id";
+
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':menu_id',$id);
+
+            $stmt->execute();
+
+            $db->commit();
+        }
+        catch (\Exception $e)
+        {
+            $db->rollBack();
+            throw $e;
+        }
+        return ['message' => 'ok'];
+    }
 
     public function getItems()
     {
