@@ -7,28 +7,35 @@
  */
 declare(strict_types=1);
 namespace App\Controllers;
+use App\Models\UserModel;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class UserController
 {
+    protected $user;
+    public function __construct()
+    {
+        $this->user = new UserModel();
+    }
 
     public function registerFunction(Request $request, Response $response, array $args)
     {
         $body = $request->getParsedBody();
-        $email = $body['email'];
-        $name = $request->getParam('name');
 
-        return $response->withJson(compact('body', 'email', 'name', 'args'));
+        $result = $this->user->addUser($body);
+        $response->getBody()->write(json_encode($result));
+        $response = $response->withHeader('Content-Type','application/json');
+        return $response;
     }
 
     public function loginFunction(Request $request, Response $response, array $args)
     {
-        $queryParams = $request->getParsedBody();
-        $email = $queryParams['email'];
-        $password = $queryParams['password'];
-
-        $response->getBody()->write(json_encode($email));
+        $body = $request->getParsedBody();
+        $email = $body['username'];
+        $password = $body['password'];
+        $result = $this->user->initLogin($email, $password);
+        $response->getBody()->write(json_encode($result));
         $response = $response->withHeader('Content-Type','application/json');
         return $response;
     }

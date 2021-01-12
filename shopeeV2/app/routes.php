@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use App\Application\Actions\User\ListUsersAction;
 use App\Application\Actions\User\ViewUserAction;
+use App\Controllers\CartController;
 use App\Controllers\MenuController;
 use App\Controllers\UserController;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -34,7 +35,7 @@ return function (App $app) {
 
     $app->group('/user_auth', function (Group $group) {
         // TODO Users API
-        $group->post('/register', UserController::class . ':registerFunction');
+        $group->post('/register_once', UserController::class . ':registerFunction');
         $group->post('/login', UserController::class . ':loginFunction');
 
     });
@@ -45,12 +46,15 @@ return function (App $app) {
         $group->post('/delete_menu', MenuController::class . ':deleteMenu');
         $group->post('/update_menu', MenuController::class . ':updateMenu');
         $group->get('/menu_list', MenuController::class . ':getItems');
+        $group->get('/menu_list/{user_id}', MenuController::class . ':myItems');
     });
 
 
     $app->group('/cart', function (Group $group) {
         // TODO Cart API
-        $group->get('/get_cart_item/{id}', CartController::class . ':registerFunction');
+        $group->post('/add_to_cart', CartController::class . ':addToCart');
+        $group->get('/get_cart_item/{user_id}', CartController::class . ':getCartItems');
+        $group->post('/update_cart', CartController::class . ':updateCart');
         $group->get('/delete/{id}/{cart_id}', CartController::class . ':registerFunction');
         $group->get('/order/{id}/{cart_id}', CartController::class . ':registerFunction');
     });

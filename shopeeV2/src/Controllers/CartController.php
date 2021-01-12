@@ -32,6 +32,15 @@ class CartController
         return $response;
     }
 
+    public function getCartItems(Request $request, Response $response, array $args)
+    {
+        $user_id = $args['user_id'];
+        $result = $this->cart->getCartItems($user_id);
+        $response->getBody()->write(json_encode($result));
+        $response = $response->withHeader('Content-Type','application/json');
+        return $response;
+    }
+
     public function updateCart(Request $request, Response $response, array $args)
     {
         $queryParams = $request->getParsedBody();

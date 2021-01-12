@@ -26,8 +26,10 @@ class MenuController
         $queryParams = $request->getParsedBody();
         $name = $queryParams['name'];
         $price = $queryParams['price'];
+        $user_id = $queryParams['user_id'];
+        $image = $queryParams['image'];
 
-        $result = $this->menu->addMenu($name, $price);
+        $result = $this->menu->addMenu($name, $price, $user_id, $image);
         $response->getBody()->write(json_encode($result));
         $response = $response->withHeader('Content-Type','application/json');
         return $response;
@@ -50,6 +52,15 @@ class MenuController
         $id = $queryParams['menu_id'];
 
         $result = $this->menu->updateMenu($queryParams);
+        $response->getBody()->write(json_encode($result));
+        $response = $response->withHeader('Content-Type','application/json');
+        return $response;
+    }
+
+    public function myItems(Request $request, Response $response, array $args)
+    {
+        $name = $args['user_id'];
+        $result = $this->menu->getMyItems($name);
         $response->getBody()->write(json_encode($result));
         $response = $response->withHeader('Content-Type','application/json');
         return $response;

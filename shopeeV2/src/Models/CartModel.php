@@ -28,6 +28,18 @@ class CartModel {
         return ['message' => 'ok'];
     }
 
+    public function getCartItems($id)
+    {
+        $db = Database::getInstance()->getDB();
+
+        $sql = "SELECT * FROM `cart` AS c LEFT JOIN `menu` AS m ON m.menu_id = c.menu_id WHERE c.user_id = :user_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':user_id',$id);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
     public function updateCart($quantity, $cart_id)
     {
         $db = Database::getInstance()->getDB();
